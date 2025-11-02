@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key-change-in-production')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com', '.railway.app', '.render.com
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com', '.railway.app', '.render.com']
 # Application definition
 INSTALLED_APPS = [
  'django.contrib.admin',
@@ -65,7 +65,7 @@ DATABASES = {
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
-           'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator
+           'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',

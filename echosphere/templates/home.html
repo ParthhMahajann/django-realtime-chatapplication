@@ -1,0 +1,150 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EchoSphere - Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <!-- Hero Section -->
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+            <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <i class="fas fa-comments text-white text-4xl"></i>
+            </div>
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                Welcome to <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">EchoSphere</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Experience the future of communication with our emotion-aware chat platform. 
+                Connect with others on a deeper level through AI-powered sentiment analysis.
+            </p>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex justify-center space-x-4 mb-12">
+            {% if user.is_authenticated %}
+                <a href="{% url 'chat:room_list' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-200">
+                    <i class="fas fa-comments mr-2"></i>Start Chatting
+                </a>
+                <a href="{% url 'chat:dashboard' %}" class="bg-purple-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-purple-700 transition duration-200">
+                    <i class="fas fa-chart-line mr-2"></i>View Analytics
+                </a>
+            {% else %}
+                <a href="{% url 'users:register' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-200">
+                    <i class="fas fa-user-plus mr-2"></i>Get Started
+                </a>
+                <a href="{% url 'users:login' %}" class="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-50 transition duration-200">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="grid md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-smile text-green-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Emotion Detection</h3>
+            <p class="text-gray-600">
+                Advanced AI analyzes the emotional tone of your messages in real-time, 
+                helping you understand the mood of your conversations.
+            </p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-bolt text-blue-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Real-Time Chat</h3>
+            <p class="text-gray-600">
+                Instant messaging with WebSocket technology ensures your conversations 
+                flow naturally without delays or refreshes.
+            </p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chart-bar text-purple-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Emotion Analytics</h3>
+            <p class="text-gray-600">
+                Track your emotional patterns over time with beautiful charts and insights 
+                to better understand your communication style.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Demo Section -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">See It In Action</h2>
+        <div class="max-w-2xl mx-auto">
+            <!-- Demo Chat Messages -->
+            <div class="space-y-4 text-left">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm font-medium">A</span>
+                    </div>
+                    <div class="emotion-happy p-3 rounded-lg max-w-xs">
+                        <p class="text-gray-800">I'm so excited about this project! 🎉</p>
+                        <div class="flex items-center mt-2 space-x-2">
+                            <span class="text-lg">😊</span>
+                            <span class="text-xs text-gray-500">Happy • 95% confidence</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-3 justify-end">
+                    <div class="emotion-positive p-3 rounded-lg max-w-xs">
+                        <p class="text-gray-800">That sounds great! I'm looking forward to it.</p>
+                        <div class="flex items-center mt-2 space-x-2">
+                            <span class="text-lg">🙂</span>
+                            <span class="text-xs text-gray-500">Positive • 78% confidence</span>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm font-medium">B</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm font-medium">A</span>
+                    </div>
+                    <div class="emotion-surprised p-3 rounded-lg max-w-xs">
+                        <p class="text-gray-800">Wow, I didn't expect this response!</p>
+                        <div class="flex items-center mt-2 space-x-2">
+                            <span class="text-lg">😲</span>
+                            <span class="text-xs text-gray-500">Surprised • 89% confidence</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics -->
+    {% if user.is_authenticated %}
+    <div class="grid md:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="text-3xl font-bold text-blue-600 mb-2">{{ total_rooms|default:"3" }}</div>
+            <div class="text-gray-600">Active Rooms</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="text-3xl font-bold text-green-600 mb-2">{{ total_messages|default:"1,234" }}</div>
+            <div class="text-gray-600">Messages Sent</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="text-3xl font-bold text-purple-600 mb-2">{{ happy_percentage|default:"67" }}%</div>
+            <div class="text-gray-600">Happy Messages</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="text-3xl font-bold text-orange-600 mb-2">{{ total_users|default:"156" }}</div>
+            <div class="text-gray-600">Total Users</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
