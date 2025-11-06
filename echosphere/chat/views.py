@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Avg
 from django.utils.text import slugify
 from django.utils import timezone
 from datetime import timedelta
@@ -163,7 +163,6 @@ def emotion_dashboard(request):
     most_common_emotion = emotion_stats.first() if emotion_stats else None
     
     # Average sentiment polarity
-    from django.db.models import Avg
     avg_sentiment = Message.objects.filter(
         sender=request.user,
         timestamp__gte=start_date
@@ -177,7 +176,7 @@ def emotion_dashboard(request):
     
     context = {
         'emotion_stats': json.dumps(list(emotion_stats)),
-        'daily_emotions': json.dumps(list(daily_emotions)),
+        'daily_emotions': json.dumps(list(daily_emotions), default=str),
         'total_messages': total_messages,
         'most_common_emotion': most_common_emotion,
         'avg_sentiment': avg_sentiment['sentiment_polarity__avg'] or 0,

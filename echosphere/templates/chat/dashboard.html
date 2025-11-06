@@ -1,0 +1,158 @@
+<!-- templates/chat/dashboard.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard - EchoSphere{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Emotion Analytics</h1>
+        <p class="mt-2 text-gray-600">Track your emotional patterns over time</p>
+    </div>
+    
+    <!-- Date Range Selector -->
+    <div class="bg-white rounded-lg shadow p-4 mb-8">
+        <div class="flex gap-4">
+            <a href="?days=7" class="px-4 py-2 {% if days == 7 %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} rounded hover:bg-blue-500 transition">
+                Last 7 Days
+            </a>
+            <a href="?days=30" class="px-4 py-2 {% if days == 30 %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} rounded hover:bg-blue-500 transition">
+                Last 30 Days
+            </a>
+            <a href="?days=90" class="px-4 py-2 {% if days == 90 %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} rounded hover:bg-blue-500 transition">
+                Last 90 Days
+            </a>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="grid md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-3xl font-bold text-blue-600">{{ total_messages }}</div>
+            <div class="text-gray-600 text-sm mt-2">Total Messages</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-3xl font-bold text-green-600">{{ most_common_emotion.emotion|default:"N/A"|upper }}</div>
+            <div class="text-gray-600 text-sm mt-2">Most Common Emotion</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-3xl font-bold text-purple-600">{{ avg_sentiment|floatformat:2 }}</div>
+            <div class="text-gray-600 text-sm mt-2">Average Sentiment</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-3xl font-bold text-orange-600">{{ emotion_percentages.happy|default:0 }}%</div>
+            <div class="text-gray-600 text-sm mt-2">Happy Messages</div>
+        </div>
+    </div>
+    
+    <!-- Charts -->
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Emotion Distribution Chart -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Emotion Distribution</h2>
+            <canvas id="emotionChart"></canvas>
+        </div>
+        
+        <!-- Emotion Breakdown List -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Emotion Breakdown</h2>
+            <div class="space-y-3">
+                {% for emotion, percentage in emotion_percentages.items %}
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="font-medium text-gray-700">{{ emotion|upper }}</span>
+                            <span class="text-gray-600">{{ percentage }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ percentage }}%"></div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center text-gray-500 py-4">
+                        <p>No emotion data available yet. Start chatting to see your emotion patterns!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Parse emotion stats from Django context
+    const emotionStats = {{ emotion_stats|safe }};
+    
+    // Check if we have data
+    if (emotionStats && emotionStats.length > 0) {
+        // Prepare data for chart
+        const labels = emotionStats.map(stat => stat.emotion.charAt(0).toUpperCase() + stat.emotion.slice(1));
+        const data = emotionStats.map(stat => stat.count);
+        const colors = [
+            'rgb(75, 192, 192)',   // Teal
+            'rgb(54, 162, 235)',   // Blue
+            'rgb(255, 99, 132)',   // Red
+            'rgb(255, 159, 64)',   // Orange
+            'rgb(153, 102, 255)',  // Purple
+            'rgb(201, 203, 207)',  // Gray
+            'rgb(255, 205, 86)',   // Yellow
+            'rgb(231, 233, 237)',  // Light Gray
+            'rgb(100, 181, 246)',  // Light Blue
+        ];
+        
+        // Create chart
+        const ctx = document.getElementById('emotionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        // Show message if no data
+        const chartContainer = document.getElementById('emotionChart').parentElement;
+        chartContainer.innerHTML = `
+            <div class="text-center text-gray-500 py-12">
+                <i class="fas fa-chart-pie text-4xl mb-4"></i>
+                <p class="text-lg font-medium">No emotion data available</p>
+                <p class="text-sm mt-2">Start sending messages to see your emotion analytics!</p>
+            </div>
+        `;
+    }
+</script>
+{% endblock %}
