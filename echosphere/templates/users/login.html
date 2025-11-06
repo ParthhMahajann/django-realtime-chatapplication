@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login - EchoSphere{% endblock %}
+{% block content %}
+<div>
+    <div>
+        <div>
+            <div>
+                <i class="fas fa-comments text-white text-xl"></i>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your EchoSphere account</p>
+        </div>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div>
+                <div>
+                    <div>
+                        <i class="fas fa-exclamation-circle text-red-400"></i>
+                    </div>
+                    <div>
+                        <h3>
+                            {{ form.non_field_errors.0 }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-700">
+                    Username
+                </label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+            <div>
+                <label for="id_password" class="block text-sm font-medium text-gray-700">
+                    Password
+                </label>
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+            <div>
+                <div>
+                    <input
+                        type="checkbox"
+                        id="remember"
+                        name="remember"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    >
+                    <label for="remember" class="ml-2 block text-sm text-gray-700">
+                        Remember me
+                    </label>
+                </div>
+                <a href="{% url 'users:password_reset' %}">
+                    Forgot password?
+                </a>
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium"
+            >
+                <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+            </button>
+        </form>
+        <div>
+            <div>
+                <div>
+                    <div></div>
+                </div>
+                <div>
+                    <span>Don't have an account?</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="{% url 'users:register' %}">
+                <i class="fas fa-user-plus mr-2"></i>Create Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

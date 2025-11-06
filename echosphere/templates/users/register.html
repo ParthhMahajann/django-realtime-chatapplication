@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Register - EchoSphere{% endblock %}
+{% block content %}
+<div>
+    <div>
+        <div>
+            <div>
+                <i class="fas fa-comments text-white text-xl"></i>
+            </div>
+            <h2>Join EchoSphere</h2>
+            <p>Create your account and start chatting</p>
+        </div>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div>
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div>
+                <label for="id_first_name" class="block text-sm font-medium text-gray-700">
+                    First Name
+                </label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <p>{{ form.first_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="id_last_name" class="block text-sm font-medium text-gray-700">
+                    Last Name
+                </label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                <p>{{ form.last_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-gray-700">
+                    Email
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <p>{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-700">
+                    Username
+                </label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <p>{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="id_password1" class="block text-sm font-medium text-gray-700">
+                    Password
+                </label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <p>{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="id_password2" class="block text-sm font-medium text-gray-700">
+                    Confirm Password
+                </label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <p>{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700"
+            >
+                <i class="fas fa-user-plus mr-2"></i>Create Account
+            </button>
+        </form>
+        <div>
+            <p>
+                Already have an account?
+                <a href="{% url 'users:login' %}">
+                    Sign In
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
